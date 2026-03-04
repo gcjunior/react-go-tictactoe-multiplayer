@@ -1,0 +1,60 @@
+.App {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.board {
+  display: inline-block;
+  border: 4px solid #333;
+  margin-top: 1rem;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  border: 2px solid #333;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cell-X {
+  color: #e74c3c;
+}
+
+.cell-O {
+  color: #3498db;
+}
+
+.cell-empty:hover {
+  background-color: #f0f0f0;
+}
+
+.winner {
+  color: green;
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+.controls {
+  margin-top: 1rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.controls button:hover {
+  background-color: #555;
+}
