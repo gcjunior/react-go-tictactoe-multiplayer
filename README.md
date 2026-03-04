@@ -71,3 +71,18 @@ export default defineConfig([
   },
 ])
 ```
+
+## Steps to run in your localhost
+
+1) git remote add origin https://github.com/gcjunior/react-go-tictactoe-multiplayer.git
+2) cd react-go-tictactoe-multiplayer
+3) npm install
+4) npm run dev
+4) cd api
+5) go mod tidy
+6) go run main.go or go run .
+
+Access your web browser: http://localhost:5173/ and open an incognito page with same url. After that you will be able to play the game.
+
+
+
