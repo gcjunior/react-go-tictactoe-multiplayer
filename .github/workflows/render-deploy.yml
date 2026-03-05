@@ -6,7 +6,35 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # React frontend tests
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Run React Frontend Tests
+        run: |
+          cd .
+          npm ci
+          npm test -- --watchAll=false
+
+      # Backend tests
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
+      - name: Run Backend Tests
+        run: |
+          cd api
+          go test ./...
+
+  deploy:
+    needs: test-build
     runs-on: ubuntu-latest
 
     steps:

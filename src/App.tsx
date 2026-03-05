@@ -80,6 +80,7 @@ function App() {
       <div
         key={`${row}-${col}`}
         className={`cell cell-${board[row][col] || "empty"}`}
+        data-testid={`cell-${row}-${col}`} // ✅ Add test id
         onClick={() => handleClick(row, col)}
       >
         {board[row][col]}

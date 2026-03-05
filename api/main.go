@@ -20,8 +20,13 @@ type Move struct {
 	Col  int    `json:"col"`
 }
 
+type WSConn interface {
+	WriteJSON(v interface{}) error
+	Close() error
+}
+
 type Client struct {
-	conn   *websocket.Conn
+	conn   WSConn
 	player string
 }
 
@@ -34,24 +39,6 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
-
-// var upgrader = websocket.Upgrader{
-// 	ReadBufferSize:  1024,
-// 	WriteBufferSize: 1024,
-
-// 	CheckOrigin: func(r *http.Request) bool {
-
-// 		origin := r.Header.Get("Origin")
-
-// 		if origin == "http://localhost:5173" ||
-// 			origin == "http://127.0.0.1:5173" {
-// 			return true
-// 		}
-
-// 		// allow everything in development
-// 		return true
-// 	},
-// }
 
 func newGame() {
 

@@ -85,13 +85,15 @@ export default defineConfig([
 Access your web browser: http://localhost:5173/ and open an incognito page with same url. After that you will be able to play the game.
 
 
-## to run inside docker in your localhost
+## Steps to run inside docker in your localhost
 
 1) docker compose up --build
 2) access web browser http://localhost:8080
 
 
-## github secrets
+## github secrets setup for dev/prod
 
 1) https://github.com/gcjunior/react-go-tictactoe-multiplayer/settings/secrets/actions
 2) add RENDER_TICTACTOE_MULTIPLAYER_API_KEY to github repo actions secrets
+
+## [link](https://react-go-tictactoe-multiplayer.onrender.com/) for the game
