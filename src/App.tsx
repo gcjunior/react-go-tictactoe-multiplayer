@@ -1,84 +1,81 @@
-import { useEffect, useState } from "react"
-import "./App.css"
+import { useEffect, useState } from "react";
+import "./App.css";
 
-type Board = string[][]
+type Board = string[][];
 
 type GameState = {
-  board: Board
-  player: string
-  winner: string
-}
+  board: Board;
+  player: string;
+  winner: string;
+};
 
 function App() {
-
   const [board, setBoard] = useState<Board>([
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
-  ])
+  ]);
 
-  const [player, setPlayer] = useState<string>("")
-  const [currentTurn, setCurrentTurn] = useState<string>("X")
-  const [winner, setWinner] = useState<string>("")
+  const [player, setPlayer] = useState<string>("");
+  const [currentTurn, setCurrentTurn] = useState<string>("X");
+  const [winner, setWinner] = useState<string>("");
 
-  const [ws, setWs] = useState<WebSocket | null>(null)
+  const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-
-    const socket = new WebSocket(`ws://${window.location.host}/ws`)
+    // secure
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
     socket.onopen = () => {
-      console.log("connected")
-    }
+      console.log("connected");
+    };
 
     socket.onmessage = (event) => {
-
-      const data = JSON.parse(event.data)
+      const data = JSON.parse(event.data);
 
       if (data.type === "player") {
-        setPlayer(data.player)
+        setPlayer(data.player);
       } else {
-        const state: GameState = data
-        setBoard(state.board)
-        setCurrentTurn(state.player)
-        setWinner(state.winner)
+        const state: GameState = data;
+        setBoard(state.board);
+        setCurrentTurn(state.player);
+        setWinner(state.winner);
       }
-    }
+    };
 
-    setWs(socket)
+    setWs(socket);
 
-    return () => socket.close()
-
-  }, [])
+    return () => socket.close();
+  }, []);
 
   const handleClick = (row: number, col: number) => {
+    if (!ws) return;
 
-    if (!ws) return
+    if (board[row][col] !== "") return;
+    if (winner) return;
+    if (player !== currentTurn) return;
 
-    if (board[row][col] !== "") return
-    if (winner) return
-    if (player !== currentTurn) return
-
-    ws.send(JSON.stringify({
-      type: "move",
-      row,
-      col
-    }))
-
-  }
+    ws.send(
+      JSON.stringify({
+        type: "move",
+        row,
+        col,
+      }),
+    );
+  };
 
   const handleReset = () => {
+    if (!ws) return;
 
-    if (!ws) return
-
-    ws.send(JSON.stringify({
-      type: "reset"
-    }))
-
-  }
+    ws.send(
+      JSON.stringify({
+        type: "reset",
+      }),
+    );
+  };
 
   const renderCell = (row: number, col: number) => {
-
     return (
       <div
         key={`${row}-${col}`}
@@ -87,13 +84,11 @@ function App() {
       >
         {board[row][col]}
       </div>
-    )
-
-  }
+    );
+  };
 
   return (
     <div className="App">
-
       <h1>Tic Tac Toe Multiplayer</h1>
 
       <h2>
@@ -103,22 +98,18 @@ function App() {
       {winner && <h2 className="winner">Winner: {winner}</h2>}
 
       <div className="board">
-
         {board.map((r, row) => (
           <div className="row" key={row}>
             {r.map((_, col) => renderCell(row, col))}
           </div>
         ))}
-
       </div>
 
       <div className="controls">
         <button onClick={handleReset}>Reset Game</button>
       </div>
-
     </div>
-  )
-
+  );
 }
 
-export default App
+export default App;
