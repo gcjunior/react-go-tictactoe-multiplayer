@@ -1,0 +1,37 @@
+name: CI/CD - Render Docker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Log in to Render (optional, if using Docker Registry)
+      # For public container builds Render handles it automatically
+
+      # Step 4: Build Docker image (optional local build check)
+      - name: Build Docker Image
+        run: |
+          docker build -t tictactoe-app .
+
+      # Step 5: Trigger Render deploy via API
+      - name: Trigger Render Deployment
+        env:
+          RENDER_TICTACTOE_MULTIPLAYER_API_KEY: ${{ secrets.RENDER_TICTACTOE_MULTIPLAYER_API_KEY }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/json" \
+            -H "Authorization: Bearer $RENDER_TICTACTOE_MULTIPLAYER_API_KEY" \
+            https://api.render.com/deploy/srv-d6ksrqn5r7bs73e7fi70
