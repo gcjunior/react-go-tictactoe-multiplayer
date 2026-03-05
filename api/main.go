@@ -32,20 +32,26 @@ var mu sync.Mutex
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-
-	CheckOrigin: func(r *http.Request) bool {
-
-		origin := r.Header.Get("Origin")
-
-		if origin == "http://localhost:5173" ||
-			origin == "http://127.0.0.1:5173" {
-			return true
-		}
-
-		// allow everything in development
-		return true
-	},
+	CheckOrigin:     func(r *http.Request) bool { return true },
 }
+
+// var upgrader = websocket.Upgrader{
+// 	ReadBufferSize:  1024,
+// 	WriteBufferSize: 1024,
+
+// 	CheckOrigin: func(r *http.Request) bool {
+
+// 		origin := r.Header.Get("Origin")
+
+// 		if origin == "http://localhost:5173" ||
+// 			origin == "http://127.0.0.1:5173" {
+// 			return true
+// 		}
+
+// 		// allow everything in development
+// 		return true
+// 	},
+// }
 
 func newGame() {
 
@@ -234,6 +240,9 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	newGame()
+
+	fs := http.FileServer(http.Dir("./dist"))
+	http.Handle("/", fs)
 
 	http.HandleFunc("/ws", handleConnection)
 
